@@ -66,8 +66,12 @@ export default function WeeklyReport() {
       });
       
     } catch (err) {
-      toast.error('Failed to generate weekly report');
-      console.error(err);
+      console.error("Weekly Report Error:", err);
+      if (err.message?.includes('index')) {
+        toast.error('Firestore Index required. Check console for link.');
+      } else {
+        toast.error('Failed to generate weekly report');
+      }
     } finally {
       setLoading(false);
     }

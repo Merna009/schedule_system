@@ -32,8 +32,12 @@ export default function SessionsLog() {
       const snap = await getDocs(q);
       setSessions(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     } catch (err) {
-      toast.error(t('failed_load_history'));
-      console.error(err);
+      console.error("Sessions Log Error:", err);
+      if (err.message?.includes('index')) {
+        toast.error('Firestore Index required. Check console for link.');
+      } else {
+        toast.error(t('failed_load_history'));
+      }
     } finally {
       setLoading(false);
     }

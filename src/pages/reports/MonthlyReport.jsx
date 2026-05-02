@@ -84,8 +84,12 @@ export default function MonthlyReport() {
       });
 
     } catch (err) {
-      toast.error(t('monthly_report_failed'));
-      console.error(err);
+      console.error("Monthly Report Error:", err);
+      if (err.message?.includes('index')) {
+        toast.error('Firestore Index required. Check console for link.');
+      } else {
+        toast.error(t('monthly_report_failed'));
+      }
     } finally {
       setLoading(false);
     }

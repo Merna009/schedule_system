@@ -136,7 +136,11 @@ export default function Sidebar({ onClose }) {
                     `flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-[13px] ${isActive ? 'text-primary font-semibold bg-white shadow-sm border border-slate-200/50' : 'text-slate-500 font-medium hover:text-slate-900 hover:bg-slate-200/30'}`
                   }
                 >
-                  <Clock size={14} className={isActive => isActive ? "text-primary" : "text-slate-400"} /> {t('weekly_activity')}
+                  {({ isActive }) => (
+                    <>
+                      <Clock size={14} className={isActive ? "text-primary" : "text-slate-400"} /> {t('weekly_activity')}
+                    </>
+                  )}
                 </NavLink>
                 <NavLink
                   to="/reports/monthly"
@@ -145,7 +149,11 @@ export default function Sidebar({ onClose }) {
                     `flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-[13px] ${isActive ? 'text-primary font-semibold bg-white shadow-sm border border-slate-200/50' : 'text-slate-500 font-medium hover:text-slate-900 hover:bg-slate-200/30'}`
                   }
                 >
-                  <CalendarDays size={14} className={isActive => isActive ? "text-primary" : "text-slate-400"} /> {t('monthly_analysis')}
+                  {({ isActive }) => (
+                    <>
+                      <CalendarDays size={14} className={isActive ? "text-primary" : "text-slate-400"} /> {t('monthly_analysis')}
+                    </>
+                  )}
                 </NavLink>
                 <NavLink
                   to="/reports/sessions-log"
@@ -154,7 +162,11 @@ export default function Sidebar({ onClose }) {
                     `flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-[13px] ${isActive ? 'text-primary font-semibold bg-white shadow-sm border border-slate-200/50' : 'text-slate-500 font-medium hover:text-slate-900 hover:bg-slate-200/30'}`
                   }
                 >
-                  <FileText size={14} className={isActive => isActive ? "text-primary" : "text-slate-400"} /> {t('sessions_log')}
+                  {({ isActive }) => (
+                    <>
+                      <FileText size={14} className={isActive ? "text-primary" : "text-slate-400"} /> {t('sessions_log')}
+                    </>
+                  )}
                 </NavLink>
               </div>
             )}
