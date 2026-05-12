@@ -12,12 +12,10 @@ import {
   History,
   Target,
   Plus,
-  FileText,
-  Upload,
   Trash2
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Label } from 'recharts';
-import { getChild, updateChildProgress, uploadChildDocument, deleteChildDocument } from '../services/childService';
+import { getChild, updateChildProgress } from '../services/childService';
 import { getSessionsByChildId } from '../services/sessionService';
 import { getTreatmentPlansForChild, addGoalToPlan } from '../services/treatmentPlanService';
 import { getChildMedications, deleteMedication } from '../services/medicationService';
@@ -38,10 +36,7 @@ export default function ChildProfile() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  // Storage State
-  const [uploadingFile, setUploadingFile] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const fileInputRef = React.useRef(null);
+
 
   // Goal Modal State
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
@@ -132,41 +127,6 @@ export default function ChildProfile() {
       toast.error(t('goal_add_failed'));
     } finally {
       setUpdating(false);
-    }
-  };
-
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    setUploadingFile(true);
-    setUploadProgress(0);
-    try {
-      const newDoc = await uploadChildDocument(child.id, file, (progress) => {
-        setUploadProgress(Math.round(progress));
-      });
-      setChild(prev => ({ ...prev, attachments: [...(prev.attachments || []), newDoc] }));
-      toast.success(t('file_uploaded_success'));
-    } catch (err) {
-      console.error(err);
-      toast.error(t('upload_failed'));
-    } finally {
-      setUploadingFile(false);
-      event.target.value = '';
-    }
-  };
-
-  const handleDeleteAttachment = async (attachment) => {
-    if (!window.confirm(t('delete_file_confirm'))) return;
-    try {
-      await deleteChildDocument(child.id, attachment);
-      setChild(prev => ({
-        ...prev,
-        attachments: prev.attachments.filter(a => a.path !== attachment.path)
-      }));
-      toast.success(t('deleted_success'));
-    } catch {
-      toast.error(t('delete_failed'));
     }
   };
 
@@ -448,63 +408,6 @@ export default function ChildProfile() {
             </div>
           </div>
 
-          {/* Attachments Section */}
-          <div className="bg-white rounded-[24px] border border-slate-200/50 shadow-sm p-8">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <FileText className="text-primary" />
-                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">{t('attachments_reports')}</h3>
-              </div>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-              />
-              <button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadingFile}
-                  className="bg-orange-50 text-primary px-6 py-3 rounded-2xl font-black text-xs flex items-center gap-2 hover:bg-primary hover:text-white transition-all active:scale-95 disabled:opacity-50"
-                >
-                  {uploadingFile ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
-                  {uploadingFile ? `${uploadProgress}%` : t('upload_file')}
-                </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(child.attachments || []).map((att, idx) => (
-                <div key={idx} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between group hover:border-primary/20 transition-all">
-                  <div className="flex items-center gap-3 w-3/4" onClick={() => window.open(att.url, '_blank')} role="button">
-                    <div className="p-2 bg-white rounded-lg text-red-500 shadow-sm"><FileText size={20} /></div>
-                    <div className="w-full">
-                      <p className="text-xs font-black text-slate-900 truncate" title={att.name}>{att.name}</p>
-                      <p className="text-[10px] text-gray-400 font-bold">{(att.sizeBytes / 1024 / 1024).toFixed(2)} MB</p>
-                    </div>
-                  </div>
-                  <button onClick={(e) => { e.stopPropagation(); handleDeleteAttachment(att); }} className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-2 bg-white rounded-xl shadow-sm"><Trash2 size={16} /></button>
-                </div>
-              ))}
-
-              {(!child.attachments || child.attachments.length === 0) && !uploadingFile && (
-                <div className="col-span-1 md:col-span-2 p-4 bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center justify-center border-dashed border-2 py-10" onClick={() => fileInputRef.current?.click()} role="button">
-                  <div className="flex flex-col items-center gap-2 text-gray-300">
-                    <Upload size={24} />
-                    <p className="text-[10px] font-black uppercase tracking-widest">{t('no_attachments_click')}</p>
-                  </div>
-                </div>
-              )}
-
-              {uploadingFile && (
-                <div className="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 flex items-center justify-center border-dashed border-2">
-                  <div className="flex flex-col items-center gap-2 text-primary">
-                    <Loader2 size={24} className="animate-spin" />
-                    <p className="text-[10px] font-black uppercase tracking-widest">{t('uploading')}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
 
         </div>
 

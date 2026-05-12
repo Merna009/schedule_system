@@ -5,6 +5,7 @@ import { getEligibleChildrenForSlot, executeBookingTransaction } from '../servic
 import { format, addDays } from 'date-fns';
 import { Calendar as CalendarIcon, ChevronRight, ChevronLeft, X, Clock, UserRound, Sparkles } from 'lucide-react';
 import { useTranslation } from '../contexts/LanguageContext';
+import { formatTo12h } from '../utils/timeFormat';
 
 export default function Schedule() {
   const { t, lang } = useTranslation();
@@ -158,7 +159,7 @@ export default function Schedule() {
                             <div className="flex justify-between items-center mb-3">
                               <div className="flex items-center gap-2 text-navy">
                                  <Clock size={14} className="text-primary" strokeWidth={3} />
-                                 <span className="font-black text-sm tracking-tight" dir="ltr">{slot.time}</span>
+                                 <span className="font-black text-sm tracking-tight" dir="ltr">{formatTo12h(slot.time)}</span>
                               </div>
                               <div className="px-2 py-0.5 bg-navy text-white text-[8px] font-black uppercase tracking-widest rounded-md">Booked</div>
                             </div>
@@ -185,7 +186,7 @@ export default function Schedule() {
                        >
                          <div className="flex items-center gap-2 text-gray-400 group-hover:text-white">
                             <Clock size={16} strokeWidth={3} />
-                            <span className="font-black text-sm" dir="ltr">{slot.time}</span>
+                            <span className="font-black text-sm" dir="ltr">{formatTo12h(slot.time)}</span>
                          </div>
                          <div className="flex items-center gap-2 text-primary group-hover:text-white">
                             <Sparkles size={16} strokeWidth={3} />
@@ -234,7 +235,7 @@ export default function Schedule() {
                  </div>
                  <div className="flex flex-col items-end">
                     <span className="text-gray-400 text-[10px] font-black mb-1 uppercase tracking-widest">{isRtl ? 'موعد الجلسة' : 'Mission Window'}</span>
-                    <span className="font-black text-primary bg-orange-100/50 border border-orange-100 px-3 py-1 rounded-xl text-lg" dir="ltr">{selectedSlot?.time}</span>
+                    <span className="font-black text-primary bg-orange-100/50 border border-orange-100 px-3 py-1 rounded-xl text-lg" dir="ltr">{formatTo12h(selectedSlot?.time)}</span>
                  </div>
               </div>
 

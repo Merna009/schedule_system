@@ -5,8 +5,8 @@ import { getChildren, addChild } from '../services/childService';
 import { createSession } from '../services/bookingService';
 import { fetchOrCreateDaySchedule } from '../services/scheduleService';
 import { useTranslation } from '../contexts/LanguageContext';
-
 import { toast } from 'react-hot-toast';
+import { formatTo12h } from '../utils/timeFormat';
 
 export default function BookingModal({ isOpen, onClose, onRefresh, initialData }) {
   const { t, lang } = useTranslation();
@@ -169,7 +169,7 @@ export default function BookingModal({ isOpen, onClose, onRefresh, initialData }
                            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-primary"><Clock size={24} /></div>
                            <div>
                               <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest leading-none mb-1">Selected Slot</p>
-                              <p className="font-black text-slate-900 text-lg">{formData.specialistName} • {formData.date} • {formData.time}</p>
+                              <p className="font-black text-slate-900 text-lg">{formData.specialistName} • {formData.date} • {formatTo12h(formData.time)}</p>
                            </div>
                         </div>
                         <button 
@@ -242,7 +242,7 @@ export default function BookingModal({ isOpen, onClose, onRefresh, initialData }
                                   : 'bg-white border-gray-100 text-gray-600 hover:border-primary/20 hover:text-primary'
                                 }`}
                                >
-                                 {slot.time}
+                                 {formatTo12h(slot.time)}
                                </button>
                              ))}
                           </div>
@@ -294,7 +294,7 @@ export default function BookingModal({ isOpen, onClose, onRefresh, initialData }
                           <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary"><Clock size={20} /></div>
                           <div>
                              <p className="text-[10px] uppercase opacity-60">Selection</p>
-                             <p>{formData.specialistName} • {formData.date} • {formData.time}</p>
+                             <p>{formData.specialistName} • {formData.date} • {formatTo12h(formData.time)}</p>
                           </div>
                        </div>
                        <button type="button" onClick={() => setStep(1)} className="text-primary font-black text-xs hover:underline uppercase tracking-widest">{t('change') || 'Change'}</button>

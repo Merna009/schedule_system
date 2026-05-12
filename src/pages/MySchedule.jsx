@@ -25,12 +25,12 @@ export default function MySchedule() {
 
   useEffect(() => {
     if (!userProfile?.specialistId) return;
-    
+
     // Generate dates for current week (Sun - Thu)
     const start = startOfWeek(new Date(), { weekStartsOn: 0 });
     const dates = Array.from({ length: 5 }).map((_, i) => addDays(start, i));
     setWeekDates(dates);
-    
+
     loadWeekSchedule(dates);
   }, [userProfile]);
 
@@ -102,7 +102,7 @@ export default function MySchedule() {
         <div className="hidden lg:block text-right">
           <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">{isRtl ? 'الأسبوع الحالي' : 'Current Week'}</p>
           <p className="text-xl font-black text-slate-900 flex items-center gap-2">
-            <Calendar size={20} className="text-primary"/> 
+            <Calendar size={20} className="text-primary" />
             {weekDates.length > 0 && `${format(weekDates[0], 'MMM d')} - ${format(weekDates[weekDates.length - 1], 'MMM d, yyyy')}`}
           </p>
         </div>
@@ -115,7 +115,7 @@ export default function MySchedule() {
           {weekDates.map(date => {
             const dateStr = format(date, 'yyyy-MM-dd');
             let daySlots = scheduleData[dateStr] || [];
-            
+
             // Only show reserved/completed sessions
             daySlots = daySlots.filter(slot => slot.status !== 'free');
 
@@ -127,11 +127,11 @@ export default function MySchedule() {
                   <p className="text-[10px] font-black uppercase tracking-widest text-white/70">{format(date, 'EEEE', { locale })}</p>
                   <p className="text-xl font-black">{format(date, 'do', { locale })}</p>
                 </div>
-                
+
                 <div className="p-4 flex-1 bg-gray-50/50 space-y-3 overflow-y-auto">
                   {!hasSlots ? (
                     <div className="h-full flex items-center justify-center py-8">
-                       <p className="text-xs text-gray-400 font-bold text-center">No assignments</p>
+                      <p className="text-xs text-gray-400 font-bold text-center">No assignments</p>
                     </div>
                   ) : (
                     daySlots.map(slot => {
@@ -150,37 +150,38 @@ export default function MySchedule() {
 
                       const hasNotes = slot.notes && slot.notes.trim().length > 0;
                       return (
-                      <div key={slot.time} className={`p-4 rounded-xl border-2 flex flex-col justify-between ${slot.status === 'booked' ? 'bg-orange-50/50 border-orange-100' : slot.status === 'completed' ? (hasNotes ? 'bg-emerald-50/50 border-emerald-200' : 'bg-teal-50/50 border-teal-200 border-dashed') : 'bg-white border-gray-100 shadow-sm'}`}>
-                        <div>
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="font-black text-slate-900 text-lg">{slot.time}</span>
-                            <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-md ${slot.status === 'booked' ? 'bg-orange-200 text-orange-800' : slot.status === 'completed' ? (hasNotes ? 'bg-emerald-500 text-white shadow-md' : 'bg-teal-100 text-teal-800') : 'bg-gray-100 text-gray-400'}`}>
-                              {slot.status === 'completed' ? (hasNotes ? (isRtl ? 'مكتملة بملاحظات' : 'Complete (Notes)') : (isRtl ? 'مكتملة بدون ملاحظات' : 'Complete (No Notes)')) : slot.status}
-                            </span>
+                        <div key={slot.time} className={`p-4 rounded-xl border-2 flex flex-col justify-between ${slot.status === 'booked' ? 'bg-orange-50/50 border-orange-100' : slot.status === 'completed' ? (hasNotes ? 'bg-emerald-50/50 border-emerald-200' : 'bg-teal-50/50 border-teal-200 border-dashed') : 'bg-white border-gray-100 shadow-sm'}`}>
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="font-black text-slate-900 text-lg">{slot.time}</span>
+                              <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-md ${slot.status === 'booked' ? 'bg-orange-200 text-orange-800' : slot.status === 'completed' ? (hasNotes ? 'bg-emerald-500 text-white shadow-md' : 'bg-teal-100 text-teal-800') : 'bg-gray-100 text-gray-400'}`}>
+                                {slot.status === 'completed' ? (hasNotes ? (isRtl ? 'مكتملة بملاحظات' : 'Complete (Notes)') : (isRtl ? 'مكتملة بدون ملاحظات' : 'Complete (No Notes)')) : slot.status}
+                              </span>
+                            </div>
+                            {slot.session && (
+                              <div className="mt-2 bg-white/60 p-2 rounded-lg border border-white/40">
+                                <p className="text-sm font-black text-primary truncate" title={slot.session.childName}>
+                                  {slot.session.childName}
+                                </p>
+                                {slot.session.planFocus && (
+                                  <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mt-1">{slot.session.planFocus}</p>
+                                )}
+                              </div>
+                            )}
                           </div>
-                          {slot.session && (
-                            <div className="mt-2 bg-white/60 p-2 rounded-lg border border-white/40">
-                              <p className="text-sm font-black text-primary truncate" title={slot.session.childName}>
-                                {slot.session.childName}
-                              </p>
-                              {slot.session.planFocus && (
-                                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mt-1">{slot.session.planFocus}</p>
-                              )}
+                          {slot.status === 'completed' && slot.session && (
+                            <div className="mt-3 pt-3 border-t border-black/5">
+                              <button
+                                onClick={() => handleOpenNotes(slot.session, slot.notes)}
+                                className={`w-full py-2 rounded-lg font-black text-xs uppercase tracking-widest transition-all active:scale-95 border ${hasNotes ? 'bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50 shadow-sm' : 'bg-teal-500 text-white border-transparent hover:bg-teal-600 shadow-md'}`}
+                              >
+                                {hasNotes ? (isRtl ? 'تعديل الملاحظات' : 'Edit Notes') : (isRtl ? 'إضافة ملاحظات سريرية' : 'Add Clinical Notes')}
+                              </button>
                             </div>
                           )}
                         </div>
-                        {slot.status === 'completed' && slot.session && (
-                          <div className="mt-3 pt-3 border-t border-black/5">
-                            <button
-                              onClick={() => handleOpenNotes(slot.session, slot.notes)}
-                              className={`w-full py-2 rounded-lg font-black text-xs uppercase tracking-widest transition-all active:scale-95 border ${hasNotes ? 'bg-white text-emerald-600 border-emerald-200 hover:bg-emerald-50 shadow-sm' : 'bg-teal-500 text-white border-transparent hover:bg-teal-600 shadow-md'}`}
-                            >
-                              {hasNotes ? (isRtl ? 'تعديل الملاحظات' : 'Edit Notes') : (isRtl ? 'إضافة ملاحظات سريرية' : 'Add Clinical Notes')}
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )})
+                      )
+                    })
                   )}
                 </div>
               </div>
@@ -198,7 +199,7 @@ export default function MySchedule() {
                 {isRtl ? 'الملاحظات السريرية' : 'Clinical Notes'}
               </h2>
               <button onClick={() => setIsNotesModalOpen(false)} className="text-gray-400 hover:text-gray-900 p-2 rounded-xl transition-colors">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
               </button>
             </div>
 

@@ -7,6 +7,7 @@ import { getSpecialists } from '../services/specialistService';
 import { Calendar, User, CheckCircle2, XCircle, Clock, Trash2, Edit2, Plus, UserRound, X, Search, RefreshCw, Coffee } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import BookingModal from '../components/BookingModal';
+import { formatTo12h } from '../utils/timeFormat';
 
 const ScheduleGrid = () => {
   const { t, lang } = useTranslation();
@@ -330,7 +331,7 @@ const ScheduleGrid = () => {
                       <Coffee size={32} />
                       <div>
                         <h3 className="text-xl font-black uppercase tracking-widest">{t('break_time') || 'Break'}</h3>
-                        <p className="text-sm font-bold opacity-80">{slot.time} - {slot.endTime}</p>
+                        <p className="text-sm font-bold opacity-80">{formatTo12h(slot.time)} - {formatTo12h(slot.endTime)}</p>
                       </div>
                     </div>
                   </div>
@@ -358,7 +359,7 @@ const ScheduleGrid = () => {
                     <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
                       <span className={`text-4xl font-black tracking-tighter flex items-center gap-3 ${isCompleted ? 'text-emerald-900' : isBooked ? 'text-red-900' : isPassed ? 'text-gray-400' : 'text-gray-900'}`}>
                         <Clock size={20} className={isPassed ? 'text-gray-300' : 'text-primary opacity-50'} />
-                        {slot.time}
+                        {formatTo12h(slot.time)}
                       </span>
                     </div>
 
@@ -480,7 +481,7 @@ const ScheduleGrid = () => {
               <div className="p-5 bg-orange-50 rounded-2xl border-2 border-orange-100 mb-4">
                 <p className="text-xs text-primary/70 font-black uppercase tracking-widest mb-2">{t('current_selection')}</p>
                 <div className="flex items-center gap-3">
-                  <span className="font-black text-2xl text-slate-900">{activeSlotTime}</span>
+                  <span className="font-black text-2xl text-slate-900">{formatTo12h(activeSlotTime)}</span>
                   <div className="h-4 w-[2px] bg-orange-200"></div>
                   <span className="font-bold text-primary">{activeSession?.childName}</span>
                 </div>
@@ -491,7 +492,7 @@ const ScheduleGrid = () => {
                 <select value={formData.newTime} onChange={e => setFormData({ ...formData, newTime: e.target.value })} className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-5 py-4 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all font-black text-2xl appearance-none">
                   {schedule.slots.map(s => (
                     <option key={s.time} value={s.time} disabled={s.status === 'booked' && s.time !== activeSlotTime}>
-                      {s.time} {s.status === 'booked' && s.time !== activeSlotTime ? `(${t('booked')})` : ''}
+                      {formatTo12h(s.time)} {s.status === 'booked' && s.time !== activeSlotTime ? `(${t('booked')})` : ''}
                     </option>
                   ))}
                 </select>
@@ -543,7 +544,7 @@ const ScheduleGrid = () => {
               <div className="p-5 bg-emerald-50/50 rounded-2xl border-2 border-emerald-100/50 mb-4">
                 <p className="text-xs text-emerald-600 font-black uppercase tracking-widest mb-1">{t('patient')}</p>
                 <h4 className="font-black text-2xl text-slate-900">{activeSession?.childName}</h4>
-                <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">{activeSlotTime} • {selectedDate}</p>
+                <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">{formatTo12h(activeSlotTime)} • {selectedDate}</p>
               </div>
 
               <div>

@@ -126,19 +126,19 @@ export default function Dashboard() {
       specialistsWorking: specialists.length
     };
   }, [schedules, specialists]);
-  
+
   const totalChildren = children.length;
   const todaySessionsCount = stats.totalBookedToday + stats.totalCompletedToday;
 
   const insights = useMemo(() => {
     const peak = [...analyticsData.flow].sort((a, b) => b.sessions - a.sessions)[0];
     const topSpec = [...analyticsData.workload].sort((a, b) => b.booked - a.booked)[0];
-    
+
     return {
       peakTime: peak?.sessions > 0 ? peak.hour : null,
       topSpec: topSpec?.booked > 0 ? topSpec.name : null,
-      completionRate: stats.totalBookedToday + stats.totalCompletedToday > 0 
-        ? Math.round((stats.totalCompletedToday / (stats.totalBookedToday + stats.totalCompletedToday)) * 100) 
+      completionRate: stats.totalBookedToday + stats.totalCompletedToday > 0
+        ? Math.round((stats.totalCompletedToday / (stats.totalBookedToday + stats.totalCompletedToday)) * 100)
         : 0
     };
   }, [analyticsData, stats]);
@@ -203,7 +203,7 @@ export default function Dashboard() {
 
   return (
     <div className={`space-y-10 animate-in fade-in duration-700 ${isRtl ? 'text-right' : 'text-left'}`}>
-      
+
       {/* Stats Quick View */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="premium-card p-6 md:p-8 group">
@@ -361,33 +361,33 @@ export default function Dashboard() {
 
           {/* Simple Insight Card */}
           <div className="lg:col-span-1 bg-slate-900 text-white rounded-[2rem] p-8 shadow-xl shadow-slate-900/20 flex flex-col justify-center gap-4 border border-white/5 relative overflow-hidden group">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 -mr-16 -mt-16 rounded-full blur-3xl group-hover:bg-primary/30 transition-all"></div>
-             <div className="p-3 bg-primary rounded-2xl w-fit shadow-lg shadow-primary/20">
-               <TrendingUp size={24} />
-             </div>
-             <div>
-               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">{t('clinical_insights')}</h4>
-               <div className="space-y-4">
-                 <div className="flex justify-between items-end border-b border-white/10 pb-4">
-                   <div>
-                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('clinical_occupancy')}</p>
-                     <p className="text-2xl font-black text-white">{stats.specialistsWorking > 0 ? Math.round((todaySessionsCount / (stats.specialistsWorking * 8)) * 100) : 0}%</p>
-                   </div>
-                   <div className="text-emerald-400 font-bold text-xs flex items-center gap-1 mb-1">
-                     <TrendingUp size={14} /> +5%
-                   </div>
-                 </div>
-                 <div className="flex justify-between items-end">
-                   <div>
-                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('pending_reports')}</p>
-                     <p className="text-2xl font-black text-white">{stats.totalBookedToday}</p>
-                   </div>
-                   <div className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest mb-1 animate-pulse">
-                     Action Req.
-                   </div>
-                 </div>
-               </div>
-             </div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 -mr-16 -mt-16 rounded-full blur-3xl group-hover:bg-primary/30 transition-all"></div>
+            <div className="p-3 bg-primary rounded-2xl w-fit shadow-lg shadow-primary/20">
+              <TrendingUp size={24} />
+            </div>
+            <div>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">{t('clinical_insights')}</h4>
+              <div className="space-y-4">
+                <div className="flex justify-between items-end border-b border-white/10 pb-4">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('clinical_occupancy')}</p>
+                    <p className="text-2xl font-black text-white">{stats.specialistsWorking > 0 ? Math.round((todaySessionsCount / (stats.specialistsWorking * 8)) * 100) : 0}%</p>
+                  </div>
+                  <div className="text-emerald-400 font-bold text-xs flex items-center gap-1 mb-1">
+                    <TrendingUp size={14} /> +5%
+                  </div>
+                </div>
+                <div className="flex justify-between items-end">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('pending_reports')}</p>
+                    <p className="text-2xl font-black text-white">{stats.totalBookedToday}</p>
+                  </div>
+                  <div className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest mb-1 animate-pulse">
+                    Action Req.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -499,10 +499,10 @@ export default function Dashboard() {
                               </div>
 
                               <div className="flex items-center gap-2 mb-4">
-                                  <div className={`p-2 rounded-xl ${isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-50 text-primary'}`}>
-                                    {isCompleted ? <CheckCircle2 size={16} strokeWidth={3} /> : <Clock size={16} strokeWidth={3} />}
-                                  </div>
-                                  <span className={`font-black text-lg tracking-tight ${isCompleted ? 'text-emerald-900' : 'text-slate-900'}`}>{slot.time}</span>
+                                <div className={`p-2 rounded-xl ${isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-50 text-primary'}`}>
+                                  {isCompleted ? <CheckCircle2 size={16} strokeWidth={3} /> : <Clock size={16} strokeWidth={3} />}
+                                </div>
+                                <span className={`font-black text-lg tracking-tight ${isCompleted ? 'text-emerald-900' : 'text-slate-900'}`}>{slot.time}</span>
                                 {isCompleted && (
                                   <span className="text-[8px] font-black uppercase tracking-widest bg-emerald-500 text-white px-2 py-0.5 rounded-md">{t('completed')}</span>
                                 )}
